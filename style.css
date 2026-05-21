@@ -587,3 +587,62 @@ button:hover {
   top: -2px !important;
   right: -2px !important;
 }
+
+.audio-choice-title {
+  font-size: 24px;
+  color: #25324e;
+  margin-bottom: 16px;
+}
+
+.audio-choice {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 30px;
+}
+
+.audio-choice-btn {
+  min-width: 120px;
+  font-size: 24px;
+  border-radius: 20px;
+}
+
+.selected-audio {
+  background: #a8e67a !important;
+}
+
+.question-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+.question-row p {
+  margin: 0;
+}
+
+.audio-btn {
+  min-width: 0;
+  width: 64px;
+  height: 64px;
+  padding: 10px;
+  border-radius: 18px;
+  background: white;
+  border: 3px solid #d8ebff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.audio-btn:hover {
+  background: #f3f9ff;
+  border-color: #a9d2ff;
+}
+
+.audio-icon {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+}

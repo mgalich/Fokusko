@@ -1,3 +1,4 @@
+const correctSound = new Audio("audio/correct.mp3");
 const screens = {
   home: document.getElementById("home-screen"),
   instructions: document.getElementById("instructions-screen"),
@@ -15,6 +16,12 @@ const easyBtn = document.getElementById("easy-btn");
 const hardBtn = document.getElementById("hard-btn");
 const restartBtn = document.getElementById("restart-btn");
 const finalScore = document.getElementById("final-score");
+const audioOnBtn = document.getElementById("audio-on-btn");
+const audioOffBtn = document.getElementById("audio-off-btn");
+
+const game1AudioBtn = document.getElementById("game1-audio-btn");
+const game2AudioBtn = document.getElementById("game2-audio-btn");
+const game3AudioBtn = document.getElementById("game3-audio-btn");
 const instructionsAudio = new Audio("audio/upute.mp3");
 
 let score = 0;
@@ -23,6 +30,8 @@ let game1Index = 0;
 let game2Index = 0;
 let game3Index = 0;
 let isTransitioning = false;
+let audioEnabled = false;
+let currentTaskAudio = null;
 
 const game1Tasks = {
   easy: [
@@ -162,6 +171,7 @@ const game3Tasks = {
 };
 
 function showScreen(screen) {
+  stopCurrentTaskAudio();
   Object.values(screens).forEach((s) => s.classList.remove("active"));
   screen.classList.add("active");
 }
@@ -198,8 +208,31 @@ function setAnswersLayout(container, answersLength) {
 
 function playAudio(src) {
   if (!src) return;
-  const audio = new Audio(src);
-  audio.play().catch(() => {});
+
+  if (currentTaskAudio) {
+    currentTaskAudio.pause();
+    currentTaskAudio.currentTime = 0;
+  }
+
+  currentTaskAudio = new Audio(src);
+  currentTaskAudio.play().catch(() => {});
+}
+
+function stopCurrentTaskAudio() {
+  if (currentTaskAudio) {
+    currentTaskAudio.pause();
+    currentTaskAudio.currentTime = 0;
+  }
+}
+
+function updateAudioButtonState(button) {
+  if (!button) return;
+
+  if (audioEnabled) {
+    button.classList.remove("audio-off-look");
+  } else {
+    button.classList.add("audio-off-look");
+  }
 }
 
 function stopInstructionsAudio() {
@@ -229,9 +262,13 @@ function renderGame1() {
 
   setRobotState(1, "normal", "");
   question.textContent = task.question;
-  feedback.textContent = "";
-  isTransitioning = false;
-  playAudio(task.audi);
+  game1AudioBtn.onclick = () => playAudio(task.audio);
+feedback.textContent = "";
+isTransitioning = false;
+
+if (audioEnabled) {
+  playAudio(task.audio);
+}
 
   setAnswersLayout(answersContainer, task.answers.length);
 
@@ -243,6 +280,8 @@ function renderGame1() {
   if (isTransitioning) return;
 
   if (answer === task.correct) {
+    correctSound.currentTime = 0;
+    correctSound.play().catch(() => {});
     isTransitioning = true;
     markAnswer(button, true);
     score++;
@@ -280,9 +319,13 @@ function renderGame2() {
 
   setRobotState(2, "normal", "");
   question.textContent = task.question;
+  game2AudioBtn.onclick = () => playAudio(task.audio);
   feedback.textContent = "";
   isTransitioning = false;
-  playAudio(task.audio);
+  
+  if (audioEnabled) {
+    playAudio(task.audio);
+}
 
   setAnswersLayout(answersContainer, task.answers.length);
 
@@ -295,11 +338,13 @@ function renderGame2() {
       if (isTransitioning) return;
 
       if (answer.correct) {
-  isTransitioning = true;
-  markAnswer(button, true);
-  score++;
-  feedback.textContent = "";
-  setRobotState(2, "happy", "Bravo!");
+        correctSound.currentTime = 0;
+        correctSound.play().catch(() => {});
+        isTransitioning = true;
+        markAnswer(button, true);
+        score++;
+        feedback.textContent = "";
+        setRobotState(2, "happy", "Bravo!");
 
         setTimeout(() => {
           game2Index++;
@@ -332,9 +377,13 @@ function renderGame3() {
 
   setRobotState(3, "normal", "");
   question.textContent = task.question;
+  game3AudioBtn.onclick = () => playAudio(task.audio);
   feedback.textContent = "";
   isTransitioning = false;
-  playAudio(task.audio);
+  
+  if (audioEnabled) {
+    playAudio(task.audio);
+}
 
   setAnswersLayout(answersContainer, task.answers.length);
 
@@ -347,11 +396,13 @@ function renderGame3() {
       if (isTransitioning) return;
 
       if (answer.correct) {
-  isTransitioning = true;
-  markAnswer(button, true);
-  score++;
-  feedback.textContent = "";
-  setRobotState(3, "happy", "Bravo!");
+        correctSound.currentTime = 0;
+        correctSound.play().catch(() => {});
+        isTransitioning = true;
+        markAnswer(button, true);
+        score++;
+        feedback.textContent = "";
+        setRobotState(3, "happy", "Bravo!");
 
         setTimeout(() => {
           game3Index++;
@@ -388,6 +439,18 @@ instructionsBtn.addEventListener("click", () => {
 backHomeBtn.addEventListener("click", () => {
   stopInstructionsAudio();
   showScreen(screens.home);
+});
+
+audioOnBtn.addEventListener("click", () => {
+  audioEnabled = true;
+  audioOnBtn.classList.add("selected-audio");
+  audioOffBtn.classList.remove("selected-audio");
+});
+
+audioOffBtn.addEventListener("click", () => {
+  audioEnabled = false;
+  audioOffBtn.classList.add("selected-audio");
+  audioOnBtn.classList.remove("selected-audio");
 });
 
 easyBtn.addEventListener("click", () => {

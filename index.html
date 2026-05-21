@@ -62,6 +62,13 @@
   <div class="level-box">
     <h2>Odabir razine</h2>
 
+    <p class="audio-choice-title">Želiš li da se zadatak čita?</p>
+
+    <div class="audio-choice">
+      <button id="audio-on-btn" class="audio-choice-btn">Da</button>
+      <button id="audio-off-btn" class="audio-choice-btn selected-audio">Ne</button>
+    </div>
+
     <div class="level-options">
       <button id="easy-btn" class="level-btn easy-level">
         <img src="images/smajli.png" alt="Lakše" class="level-icon">
@@ -86,7 +93,12 @@
 
     <div class="game-content">
       <h2>Igra 1 – Prepoznavanje slova</h2>
-      <p id="game1-question">Klikni slovo M</p>
+      <div class="question-row">
+        <p id="game1-question">Klikni slovo M</p>
+        <button id="game1-audio-btn" class="audio-btn">
+          <img src="images/uho.png" alt="Slušaj zadatak" class="audio-icon">
+        </button>
+</div>
 
       <div class="answers" id="game1-answers"></div>
 
@@ -105,7 +117,12 @@
 
     <div class="game-content">
       <h2>Igra 2 – Povezivanje slova i slike</h2>
-      <p id="game2-question">Odaberi sliku za slovo S</p>
+      <div class="question-row">
+        <p id="game2-question">Odaberi sliku za slovo S</p>
+        <button id="game2-audio-btn" class="audio-btn">
+          <img src="images/uho.png" alt="Slušaj zadatak" class="audio-icon">
+        </button>
+</div>
 
       <div class="answers" id="game2-answers"></div>
 
@@ -124,7 +141,12 @@
 
     <div class="game-content">
       <h2>Igra 3 – Pažnja i reakcija</h2>
-      <p id="game3-question">Klikni zelenu boju</p>
+      <div class="question-row">
+        <p id="game3-question">Klikni zelenu boju</p>
+        <button id="game3-audio-btn" class="audio-btn">
+          <img src="images/uho.png" alt="Slušaj zadatak" class="audio-icon">
+        </button>
+</div>
 
       <div class="answers" id="game3-answers"></div>
 
