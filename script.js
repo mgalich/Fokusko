@@ -1,5 +1,6 @@
-const correctSound = new Audio("audio/correct.mp3");
-const screens = {
+const correctSound = new Audio("audio/correct.mp3"); //zvuk koji se reproducira kada korisnik odabere točan odgovor
+//svi ekrani aplikacije spremljeni u objekt radi lakšeg prebacivanja između njih:
+const screens = { 
   home: document.getElementById("home-screen"),
   instructions: document.getElementById("instructions-screen"),
   level: document.getElementById("level-screen"),
@@ -9,6 +10,7 @@ const screens = {
   end: document.getElementById("end-screen")
 };
 
+//Glavni gumbi i elementi: 
 const startBtn = document.getElementById("start-btn");
 const instructionsBtn = document.getElementById("instructions-btn");
 const backHomeBtn = document.getElementById("back-home-btn");
@@ -18,12 +20,15 @@ const restartBtn = document.getElementById("restart-btn");
 const finalScore = document.getElementById("final-score");
 const audioOnBtn = document.getElementById("audio-on-btn");
 const audioOffBtn = document.getElementById("audio-off-btn");
+const levelBackBtn = document.getElementById("level-back-btn");
 
+//Gumbi za ponovno slušanje zadatka:
 const game1AudioBtn = document.getElementById("game1-audio-btn");
 const game2AudioBtn = document.getElementById("game2-audio-btn");
 const game3AudioBtn = document.getElementById("game3-audio-btn");
 const instructionsAudio = new Audio("audio/upute.mp3");
 
+//varijable:
 let score = 0;
 let selectedLevel = "easy";
 let game1Index = 0;
@@ -33,6 +38,7 @@ let isTransitioning = false;
 let audioEnabled = false;
 let currentTaskAudio = null;
 
+//Zadaci za prvu igru:
 const game1Tasks = {
   easy: [
     { question: "Klikni slovo M", answers: ["A", "M", "S"], correct: "M", audio: "audio/slovo_M.mp3" },
@@ -46,6 +52,7 @@ const game1Tasks = {
   ]
 };
 
+//Zadaci za drugu igru:
 const game2Tasks = {
   
   easy: [
@@ -111,6 +118,7 @@ const game2Tasks = {
   ]
 };
 
+//Zadaci za treću igru:
 const game3Tasks = {
   easy: [
     {
@@ -170,12 +178,14 @@ const game3Tasks = {
   ]
 };
 
+//Prikaz početnog ekrana i skrivanje svih ostalih:
 function showScreen(screen) {
   stopCurrentTaskAudio();
   Object.values(screens).forEach((s) => s.classList.remove("active"));
   screen.classList.add("active");
 }
 
+//Mijenjanje "rapoloženja" robota i poruke ovisno o odgovoru
 function setRobotState(gameNumber, state, message = "") {
   const robot = document.getElementById(`game${gameNumber}-robot`);
   const robotMessage = document.getElementById(`game${gameNumber}-robot-message`);
@@ -193,6 +203,7 @@ function setRobotState(gameNumber, state, message = "") {
   robotMessage.textContent = message;
 }
 
+//Prilagođavanje rasporeda odgovora prema broju ponuđenih odgovora:
 function setAnswersLayout(container, answersLength) {
   container.innerHTML = "";
   container.className = "answers";
@@ -206,6 +217,7 @@ function setAnswersLayout(container, answersLength) {
   }
 }
 
+//Reproduciranje zadanog audio zapisa i zaustavljanje prethodnog ako još "svira":
 function playAudio(src) {
   if (!src) return;
 
@@ -218,6 +230,7 @@ function playAudio(src) {
   currentTaskAudio.play().catch(() => {});
 }
 
+//Funkcija za zaustavljanje trenutno aktivnog audia zadatka:
 function stopCurrentTaskAudio() {
   if (currentTaskAudio) {
     currentTaskAudio.pause();
@@ -235,11 +248,13 @@ function updateAudioButtonState(button) {
   }
 }
 
+//Zaustavljanje audia uputa kada korisnik napusti ekran s uputama:
 function stopInstructionsAudio() {
   instructionsAudio.pause();
   instructionsAudio.currentTime = 0;
 }
 
+//Označavanje odgovora zelenom kvačicom ako je točan ili crvenom bojom ako je netočan:
 function markAnswer(button, isCorrect) {
   if (isCorrect) {
     button.classList.add("answer-correct");
@@ -254,6 +269,7 @@ function markAnswer(button, isCorrect) {
   }
 }
 
+//Prikaz trenutnog zadatka prve igre i obrada odabira odgovora:
 function renderGame1() {
   const task = game1Tasks[selectedLevel][game1Index];
   const question = document.getElementById("game1-question");
@@ -311,6 +327,7 @@ if (audioEnabled) {
   });
 }
 
+//Prikaz trenutnog zadatka druge igre i obrada odabira slike:
 function renderGame2() {
   const task = game2Tasks[selectedLevel][game2Index];
   const question = document.getElementById("game2-question");
@@ -369,6 +386,7 @@ function renderGame2() {
   });
 }
 
+//Prikaz trenutnog zadatka druge igre i obrada odabira boje/oblika:
 function renderGame3() {
   const task = game3Tasks[selectedLevel][game3Index];
   const question = document.getElementById("game3-question");
@@ -426,33 +444,46 @@ function renderGame3() {
   });
 }
 
+//Klikom na Pokreni otvara se ekran za odabir razine
 startBtn.addEventListener("click", () => {
   stopInstructionsAudio();
   showScreen(screens.level);
 });
+
+//Klikom na Upute otvaraju se upute i reproducira se audio s uputama
 instructionsBtn.addEventListener("click", () => {
   showScreen(screens.instructions);
   stopInstructionsAudio();
   instructionsAudio.play().catch(() => {});
 });
 
+//Gumb Natrag vraća korisnika s uputa na početni ekran
 backHomeBtn.addEventListener("click", () => {
   stopInstructionsAudio();
   showScreen(screens.home);
 });
 
+//Strelica za povratak vraća korisnika s odabira razine na početni ekran:
+levelBackBtn.addEventListener("click", () => {
+  stopInstructionsAudio();
+  showScreen(screens.home);
+});
+
+//Uključivanje automatskog čitanja zadataka:
 audioOnBtn.addEventListener("click", () => {
   audioEnabled = true;
   audioOnBtn.classList.add("selected-audio");
   audioOffBtn.classList.remove("selected-audio");
 });
 
+//Isključivanja automatskog čitanja zadataka:
 audioOffBtn.addEventListener("click", () => {
   audioEnabled = false;
   audioOffBtn.classList.add("selected-audio");
   audioOnBtn.classList.remove("selected-audio");
 });
 
+//Pokretanje lakše razine igre s manjim brojem ponuđenih odgovora:
 easyBtn.addEventListener("click", () => {
   score = 0;
   selectedLevel = "easy";
@@ -464,6 +495,7 @@ easyBtn.addEventListener("click", () => {
   renderGame1();
 });
 
+//Pokretanje teže razine igre s većim brojem ponuđenih odgovora:
 hardBtn.addEventListener("click", () => {
   score = 0;
   selectedLevel = "hard";
@@ -475,6 +507,8 @@ hardBtn.addEventListener("click", () => {
   renderGame1();
 });
 
+//klikom na gumb za ponovno pokretanje korisnik se vraća na početni ekran
+// a rezultat i brojači igara se resetiraju:
 restartBtn.addEventListener("click", () => {
   stopInstructionsAudio();
   score = 0;
